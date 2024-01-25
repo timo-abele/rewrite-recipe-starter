@@ -15,9 +15,14 @@
  */
 package com.yourorg;
 
+import com.google.common.primitives.Booleans;
+import com.google.errorprone.refaster.ImportPolicy;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
+import com.google.errorprone.refaster.annotation.UseImportPolicy;
 import org.openrewrite.java.template.RecipeDescriptor;
+
+import java.util.Arrays;
 
 @RecipeDescriptor(
         name = "Simplify ternary expressions",
@@ -36,26 +41,10 @@ public class SimplifyTernary {
             return expr ? true : false;
         }
 
+        @UseImportPolicy(ImportPolicy.IMPORT_TOP_LEVEL)
         @AfterTemplate
         boolean after(boolean expr) {
-            return expr;
-        }
-    }
-
-    @RecipeDescriptor(
-            name = "Replace `booleanExpression ? false : true` with `!booleanExpression`",
-            description = "Replace ternary expressions like `booleanExpression ? false : true` with `!booleanExpression`."
-    )
-    public static class SimplifyTernaryFalseTrue {
-
-        @BeforeTemplate
-        boolean before(boolean expr) {
-            return expr ? false : true;
-        }
-
-        @AfterTemplate
-        boolean after(boolean expr) {
-            return !(expr);
+            return Booleans.contains(new boolean[]{true}, true);
         }
     }
 }
